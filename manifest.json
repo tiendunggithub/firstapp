@@ -1,6 +1,5 @@
 {
     "name": "PWA FISRT",
     "short_name": "PwaFirst",
-    "start_url": "index.html",
-    "display": "standalone"
+    "start_url": "index.html"
 }
