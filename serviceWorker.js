@@ -2,9 +2,9 @@ const nvtdung = 'nvt_dung'
 const assets = [
     "/",
     "home.html",
-    "/css/style.css",
-    "/js/app.js",
-    "/images/sniper.jpg"
+    "./css/style.css",
+    "./js/app.js",
+    "./images/sniper.jpg"
 ]
 
 self.addEventListener('install', installEvent => {
