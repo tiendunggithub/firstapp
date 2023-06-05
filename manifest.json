@@ -1,5 +1,56 @@
 {
     "name": "PWA FISRT",
     "short_name": "PwaFirst",
-    "start_url": "index.html"
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#fdfdfd",
+    "theme_color": "#db4938",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/images/icon/coffee-cup-32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icon/coffee-cup-72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icon/coffee-cup-96.png",
+            "type": "image/png",
+            "sizes": "96x96"
+        },
+        {
+            "src": "/images/icon/coffee-cup-128.png",
+            "type": "image/png",
+            "sizes": "128x128"
+        },
+        {
+            "src": "/images/icon/coffee-cup-144.png",
+            "type": "image/png",
+            "sizes": "144x144"
+        },
+        {
+            "src": "/images/icon/coffee-cup-152.png",
+            "type": "image/png",
+            "sizes": "152x152"
+        },
+        {
+            "src": "/images/icon/coffee-cup-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/images/icon/coffee-cup-384.png",
+            "type": "image/png",
+            "sizes": "384x384"
+        },
+        {
+            "src": "/images/icon/icon-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
 }

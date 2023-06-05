@@ -46,40 +46,22 @@ function getAllItem() {
     productlst = [];
     // const objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst");
     const tran = objStore.getAll()
-    tran.onsuccess = (event) => {
-        let content = '';
-        let header = '<td>#</td>'+
-                    '<td>Name</td>'+
-                    '<td>Price</td>'+
-                    '<td>Description</td>'+
-                    '<td>Action</td>'
-        let index = 0;
-        for(let i = 0; i < tran.result.length; i++){
-            productlst.push(tran.result[i]);
-            index = i + 1;
-            content += '<tr><td>'+index+'</td><td>'+productlst[i].name+'</td><td>'+productlst[i].price+'</td><td>'+productlst[i].description+'</td><td><button type="button"  class="btn btn-danger" onclick="delItem('+productlst[i].myKey+')">Del</button></td></tr>'
-        }
-        document.getElementById("prodLst").innerHTML = header + content;
-    }
-}
-
-function addItem(){
-    let name = document.getElementById("name").value
-    let price = document.getElementById("price").value
-    let description = document.getElementById("description").value
-    const item = {
-            name: name,
-            price: price,
-            description: description,
-            created: new Date().getTime(),
-        };
-    objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst");
-    const res = objStore.add(item);
-    res.onsuccess = (event) => {
-        alert('Thêm thành công!')
-        clearInput()
-        getAllItem()
-    }
+    // tran.onsuccess = (event) => {
+    //     console.log(`Value is: ${event.target.result}` )
+    //     let content = '';
+    //     let header = '<td>#</td>'+
+    //                 '<td>Name</td>'+
+    //                 '<td>Price</td>'+
+    //                 '<td>Description</td>'+
+    //                 '<td>Action</td>'
+    //     let index = 0;
+    //     for(let i = 0; i < tran.result.length; i++){
+    //         productlst.push(tran.result[i]);
+    //         index = i + 1;
+    //         content += '<tr><td>'+index+'</td><td>'+productlst[i].name+'</td><td>'+productlst[i].price+'</td><td>'+productlst[i].description+'</td><td><button type="button"  class="btn btn-danger" onclick="delItem('+productlst[i].myKey+')">Del</button></td></tr>'
+    //     }
+    //     document.getElementById("prodLst").innerHTML = header + content;
+    // }
 }
 
 function addObjectStore(){
@@ -96,20 +78,6 @@ function addObjectStore(){
     const res = objStore.add(item);
     res.onsuccess = (event) => {
         // alert('Thêm thành công!')
-        clearInput()
-        getAllItem()
-    }
-}
-
-function delItem(key) {
-    const objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst")
-    const tran = objStore.delete(key)
-    tran.onsuccess = (event) => {
-        console.log('del success')
-        getAllItem()
-    }
-    tran.onerror = (event) => {
-        console.log(`Del error is: ${event.target.error}` )
     }
 }
 
@@ -119,16 +87,16 @@ function clearInput() {
     document.getElementById("description").value = "";
 }
 
-function naviHome() {
-    window.location.href = '/index.html';
+function naviAdmin() {
+    window.location.href = '/admin.html';
 }
 
 //regist serveice worker
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-        navigator.serviceWorker
-            .register("serviceWorker.js")
-            .then(res => console.log("service worker registered"))
-            .catch(err => console.log("service worker not registered", err))
-    })
-}
+// if ("serviceWorker" in navigator) {
+//     window.addEventListener("load", function() {
+//         navigator.serviceWorker
+//             .register("serviceWorker.js")
+//             .then(res => console.log("service worker registered"))
+//             .catch(err => console.log("service worker not registered", err))
+//     })
+// }
