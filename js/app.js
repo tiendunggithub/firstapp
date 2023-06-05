@@ -120,7 +120,7 @@ function clearInput() {
 }
 
 function naviHome() {
-    window.location.href = '/index.html';
+    window.location.href = 'index.html';
 }
 
 //regist serveice worker

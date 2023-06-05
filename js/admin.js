@@ -88,7 +88,7 @@ function clearInput() {
 }
 
 function naviAdmin() {
-    window.location.href = '/admin.html';
+    window.location.href = 'admin.html';
 }
 
 //regist serveice worker
