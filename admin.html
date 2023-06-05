@@ -29,25 +29,28 @@
     <p>Network: <span id="network"></span></p>
     <button class="btn btn-success" onclick="naviHome()">Home</button>
     <br>
-    <img src="images/sniper.jpg" alt="###" width="50%" height="50%">
-    <br>
     <hr>
-    <form>
-        <label for="">name</label>
-        <input id="name" type="text" placeholder="nhập tên"><br>
-        <label for="">price</label>
-        <input id="price" type="number" placeholder="nhập giá" min="0"><br>
-        <label for="">description</label>
-        <textarea id="description" type="text" placeholder="nhập mô tả"></textarea>
+    <form id="createProd">
+        <div class="input-row">
+            <input id="name" type="text" placeholder="nhập tên" ><br>
+            <small></small>
+        </div>
+        <div class="input-row">
+            <input id="price" type="text" placeholder="nhập giá"><br>
+            <small></small>
+        </div>
+        <div class="input-row">
+            <textarea id="description" type="text" placeholder="nhập mô tả"></textarea>
+        </div>
+        <small></small>
+        <button type="button" class="btn btn-success" onclick="addItem()">Add</button>
     </form>
-    <!-- <button type="button" class="btn btn-primary" onclick="getAllItem()">Get all</button> -->
-    <button type="button" class="btn btn-success" onclick="addItem()">Add</button>
-    <!-- <button type="button"  class="btn btn-danger" onclick="delItem()">Del</button> -->
     <hr>
     <h2>Product List</h2>
     <table id="prodLst">
     </table>
 
-    <script src="js/app.js"></script>
+    <script type="text/javascript" src="data/data-menu.json"></script>
+    <script src="js/admin.js"></script>
 </body>
 </html>

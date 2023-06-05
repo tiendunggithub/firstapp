@@ -6,6 +6,22 @@ var existFlg = true;
 window.addEventListener('online',  updateOnlineStatus);
 window.addEventListener('offline', updateOnlineStatus);
 
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
+readTextFile("data/data-menu.json", function(text){
+    dataJson = JSON.parse(text);
+});
+
 request.onupgradeneeded = (event) => {
     // Save the IDBDatabase interface
     db = event.target.result;
@@ -46,38 +62,49 @@ function getAllItem() {
     productlst = [];
     // const objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst");
     const tran = objStore.getAll()
-    // tran.onsuccess = (event) => {
-    //     console.log(`Value is: ${event.target.result}` )
-    //     let content = '';
-    //     let header = '<td>#</td>'+
-    //                 '<td>Name</td>'+
-    //                 '<td>Price</td>'+
-    //                 '<td>Description</td>'+
-    //                 '<td>Action</td>'
-    //     let index = 0;
-    //     for(let i = 0; i < tran.result.length; i++){
-    //         productlst.push(tran.result[i]);
-    //         index = i + 1;
-    //         content += '<tr><td>'+index+'</td><td>'+productlst[i].name+'</td><td>'+productlst[i].price+'</td><td>'+productlst[i].description+'</td><td><button type="button"  class="btn btn-danger" onclick="delItem('+productlst[i].myKey+')">Del</button></td></tr>'
-    //     }
-    //     document.getElementById("prodLst").innerHTML = header + content;
-    // }
+    tran.onsuccess = (event) => {
+        let content = '';
+        let header = '<td>#</td>'+
+                    '<td>Name</td>'+
+                    '<td>Price</td>'+
+                    '<td>Description</td>'+
+                    '<td>Action</td>'
+        let index = 0;
+        for(let i = 0; i < tran.result.length; i++){
+            productlst.push(tran.result[i]);
+            index = i + 1;
+            content += '<tr><td>'+index+'</td><td>'+productlst[i].name+'</td><td>'+productlst[i].price+'</td><td>'+productlst[i].description+'</td><td><button type="button"  class="btn btn-danger" onclick="delItem('+productlst[i].myKey+')">Del</button></td></tr>'
+        }
+        document.getElementById("prodLst").innerHTML = header + content;
+    }
 }
 
 function addObjectStore(){
-    let name = 'guitar'
-    let price = '3.000.000VND'
-    let description = 'description'
-    const item = {
-            name: name,
-            price: price,
-            description: description,
-            created: new Date().getTime(),
-        };
-    // const objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst");
-    const res = objStore.add(item);
-    res.onsuccess = (event) => {
-        // alert('Thêm thành công!')
+    for (let i = 0; i < dataJson.length; i++) {
+        const item = {
+                name: dataJson[i].name,
+                price: dataJson[i].price,
+                description: dataJson[i].description,
+                image: dataJson[i].image,
+                created: new Date().getTime(),
+            };
+        // const objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst");
+        const res = objStore.add(item);
+        res.onerror = (event) => {
+            console.error(`Error addObjectStore:  ${event.target.error}`)
+        }
+    }
+}
+
+function delItem(key) {
+    const objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst")
+    const tran = objStore.delete(key)
+    tran.onsuccess = (event) => {
+        console.log('del success')
+        getAllItem()
+    }
+    tran.onerror = (event) => {
+        console.log(`Del error is: ${event.target.error}` )
     }
 }
 
@@ -87,16 +114,91 @@ function clearInput() {
     document.getElementById("description").value = "";
 }
 
-function naviAdmin() {
-    window.location.href = 'admin.html';
+function naviHome() {
+    window.location.href = 'index.html';
+}
+
+function addItem(){
+    const name = document.getElementById("name").value
+    const price = document.getElementById("price").value
+    const description = document.getElementById("description").value
+    let isValid = checkValidate(name, price, description);
+    if (isValid) {
+        alert('thêm thành công!!!')
+        // const item = {
+        //         name: name,
+        //         price: price,
+        //         description: description,
+        //         created: new Date().getTime(),
+        //     };
+        // objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst");
+        // const res = objStore.add(item);
+        // res.onsuccess = (event) => {
+        //     alert('Thêm thành công!')
+        //     clearInput()
+        //     getAllItem()
+        // }
+    }
+}
+
+// form.addEventListener("click", addItem());
+
+//validate form
+function checkValidate(name, price, description) {
+    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    const eleName = document.getElementById('name');
+    const elePrice = document.getElementById('price');
+    // const description = document.getElementById('description');
+    let isCheck = true;
+    if (name == '') {
+        setError(eleName, 'Tên không được để trống');
+        isCheck = false;
+    } else {
+        if (format.test(name)){
+            setError(eleName, 'Tên không được chứa kí tự đặc biệt');
+            isCheck = false;
+        } else {
+            setSuccess(eleName);
+        }
+    }
+
+    if (price == '') {
+        setError(elePrice, 'Giá bán không được để trống');
+        isCheck = false;
+    } else {
+        let isNumberFlg = isNumber(price);
+        if (!isNumberFlg){
+            setError(elePrice, 'Giá bán phải là một số');
+            isCheck = false
+        } else {
+            setSuccess(elePrice);
+        }
+    }
+}
+
+function isNumber(value){
+    return /^[0-9]+$/.test(value);
+}
+
+function setError(ele, message) {
+    let parentEle = ele.parentNode;
+    parentEle.classList.remove('success');
+    parentEle.classList.add('error');
+    parentEle.querySelector('small').innerHTML = message;
+}
+
+function setSuccess(ele) {
+    ele.parentNode.classList.remove('error');
+    ele.parentNode.classList.add('success');
+    parentEle.querySelector('small').innerHTML = '';
 }
 
 //regist serveice worker
-// if ("serviceWorker" in navigator) {
-//     window.addEventListener("load", function() {
-//         navigator.serviceWorker
-//             .register("serviceWorker.js")
-//             .then(res => console.log("service worker registered"))
-//             .catch(err => console.log("service worker not registered", err))
-//     })
-// }
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function() {
+        navigator.serviceWorker
+            .register("serviceWorker.js")
+            .then(res => console.log("service worker registered"))
+            .catch(err => console.log("service worker not registered", err))
+    })
+}

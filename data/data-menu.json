@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Cà phê đen",
+        "price": "10000",
+        "description": "this is description",
+        "image": "images/prod/prod-coffee-1.jpg"
+    },
+    {
+        "name": "Cà phê sữa",
+        "price": "12000",
+        "description": "this is description",
+        "image": "images/prod/prod-sua.jpg"
+    },
+    {
+        "name": "Cà phê đen SG",
+        "price": "16000",
+        "description": "this is description",
+        "image": "images/prod/prod-den-sg.jpg"
+    },
+    {
+        "name": "Cà phê sữa SG",
+        "price": "18000",
+        "description": "this is description",
+        "image": "images/prod/prod-sua-sg.jpg"
+    },
+    {
+        "name": "Bạc xỉu",
+        "price": "20000",
+        "description": "this is description",
+        "image": "images/prod/prod-bac-xiu-2.jpg"
+    }
+]

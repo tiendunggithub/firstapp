@@ -5,8 +5,18 @@ const assets = [
     "/index.html",
     "/admin.html",
     "/css/style.css",
+    "/css/home.css",
     "/js/app.js",
-    "/images/sniper.jpg"
+    "/js/home.js",
+    "/images/sniper.jpg",
+    "/images/prod/prod-bac-xiu-1.jpg",
+    "/images/prod/prod-bac-xiu-2.jpg",
+    "/images/prod/prod-bac-xiu.jpg",
+    "/images/prod/prod-coffee-1.jpg",
+    "/images/prod/prod-den-sg.jpg",
+    "/images/prod/prod-sua-sg.jpg",
+    "/images/prod/prod-sua.jpg",
+    "/images/icon/cart-plus.svg"
 ]
 
 self.addEventListener('install', installEvent => {
