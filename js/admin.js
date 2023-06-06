@@ -20,38 +20,106 @@ function readTextFile(file, callback) {
 
 readTextFile("data/data-menu.json", function(text){
     dataJson = JSON.parse(text);
+    addFirst();
 });
 
-request.onupgradeneeded = (event) => {
-    // Save the IDBDatabase interface
-    db = event.target.result;
-    if (!db.objectStoreNames.contains('databaseStoreFirst')) {
-        // Create an objectStore for this database
-        console.log('create db_object')
-        const db_object = db.createObjectStore("databaseStoreFirst", { keyPath: "myKey", autoIncrement: true});
-        existFlg = false
-    }
-}
+// request.onupgradeneeded = (event) => {
+//     // Save the IDBDatabase interface
+//     db = event.target.result;
+//     if (!db.objectStoreNames.contains('databaseStoreFirst')) {
+//         // Create an objectStore for this database
+//         console.log('create db_object')
+//         const db_object = db.createObjectStore("databaseStoreFirst", { keyPath: "myKey", autoIncrement: true});
+//         existFlg = false
+//     }
+// }
 
-request.onsuccess = function (event) 
-{
-    db = event.target.result;
-    objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst");
-    if (!existFlg) {
-        console.log('-----------add-----------')
-        addObjectStore();
-    } else {
-        console.log('-----------get all----------')
-        getAllItem();
-    }
+// request.onsuccess = function (event) 
+// {
+//     db = event.target.result;
+//     objStore = db.transaction(["databaseStoreFirst"], "readwrite").objectStore("databaseStoreFirst");
+//     if (!existFlg) {
+//         console.log('-----------add-----------')
+//         addObjectStore();
+//     } else {
+//         console.log('-----------get all----------')
+//         getAllItem();
+//     }
+//     updateOnlineStatus();
+// }
+
+// request.onerror = (event) => {
+//     alert('open indexed DB faild!!!')
+// }
+
+//localForage
+localforage.setDriver(localforage.INDEXEDDB)
+
+localforage.config({
+    driver: localforage.INDEXEDDB,
+    name: 'dbLocalForage',
+    version: 1.0,
+    storeName: 'databaseStoreFirst',
+});
+
+function addFirst() {
+    let index = 0;
     updateOnlineStatus();
+    localforage.length().then(function (length) {
+        console.log('length: ', length);
+        if (length == 0) {
+            for (let i = 0; i < dataJson.length; i++) {
+                index = i + 1;
+                let timeNow = new Date().getTime();
+                let date = new Date(timeNow)
+                console.log('Time Now: ', date.toLocaleString() );
+                const item = {
+                    name: dataJson[i].name,
+                    price: dataJson[i].price,
+                    description: dataJson[i].description,
+                    image: dataJson[i].image,
+                    created: new Date().getTime(),
+                    
+                };
+                localforage.setItem(""+index, item).then(function (value){
+                })
+            }
+        }
+    })
+    let header = '<td>#</td>'+
+                '<td>Name</td>'+
+                '<td>Price</td>'+
+                '<td>Description</td>'+
+                '<td>Action</td>'
+    let content = '';
+    localforage.iterate(function (value, key, i) {
+        console.log('key: ', key,' - value: ', value);
+        productlst.push(value);
+        content += '<tr><td>'+key+'</td><td>'+productlst[i-1].name+'</td><td>'+productlst[i-1].price+'</td><td>'+productlst[i-1].description+'</td><td><button type="button"  class="btn btn-danger" onclick="delItem('+productlst[i-1].myKey+')">Del</button></td></tr>'
+    }).then(function() {
+        document.getElementById("prodLst").innerHTML = header + content;
+    }).catch(function (err) {
+        console.error('Error Iterate: ', err);
+    })
 }
-
-request.onerror = (event) => {
-    alert('open indexed DB faild!!!')
-}
-
-
+// localforage.setItem(6, 'test3').then(function (value){
+//     localforage.getItem(1).then(function (value) {
+//         console.log('value: ', value);
+//     })
+//     localforage.keys().then(function (value) {
+//         console.log('successCallBack: ',value)
+//     })
+//     localforage.length().then(function (length) {
+//         console.log('length: ', length);
+//     })
+//     localforage.iterate(function (value, key, iterationNumber) {
+//         console.log('key: ', key,' - value: ', value);
+//     })
+//     // localforage.contains('databaseStoreFirst')
+// }).catch(function (err) {
+//     console.error('Error setItem:', err)
+// })
+//-----------------------------
 
 function updateOnlineStatus() {
   var condition = navigator.onLine ? "online" : "offline";
@@ -140,8 +208,6 @@ function addItem(){
         // }
     }
 }
-
-// form.addEventListener("click", addItem());
 
 //validate form
 function checkValidate(name, price, description) {
